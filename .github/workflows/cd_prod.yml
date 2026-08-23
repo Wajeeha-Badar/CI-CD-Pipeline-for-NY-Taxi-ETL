@@ -109,3 +109,22 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/taxi-loader:latest
             ghcr.io/${{ github.repository }}/taxi-loader:${{ github.sha }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set lowercase repo name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LC }}/taxi-loader:latest
+            ghcr.io/${{ env.REPO_LC }}/taxi-loader:${{ github.sha }}            
