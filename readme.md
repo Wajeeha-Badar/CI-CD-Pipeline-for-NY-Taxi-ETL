@@ -2,7 +2,7 @@
 
 A Dockerized ETL pipeline that loads NYC Yellow Taxi trip data into PostgreSQL, wired into a full CI/CD workflow with GitHub Actions. Built as a teaching project covering practical DevOps and data engineering patterns end-to-end: containerization, automated testing, integration testing against a real database, and automated image publishing.
 
-## Table of Contentss
+## Table of Content
 
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
