@@ -9,7 +9,7 @@ def test_transform_chunk_lowercases_columns():
         'VendorID': [1, 2],
         'passenger_count': [1, 2],
         'RatecodeID': [1, 1],
-        'payment_type': [1, 2],
+        'payment_type': [1, 2], 
         'trip_distance': [1.2, 3.4],
     })
     result = app.transform_chunk(chunk)
