@@ -9,7 +9,7 @@ def test_transform_chunk_lowercases_columns():
         'VendorID': [1, 2],
         'passenger_count': [1, 2],
         'RatecodeID': [1, 1],
-        'payment_type': [1, 2],
+        'payment_type': [1, 2], 
         'trip_distance': [1.2, 3.4],
     })
     result = app.transform_chunk(chunk)
@@ -57,3 +57,26 @@ def test_get_engine_uses_env_vars(monkeypatch):
 
     engine = app.get_engine()
     assert str(engine.url) == 'postgresql+psycopg2://testuser:***@testhost:5555/testdb'
+
+
+def test_no_unrealistic_speed_trips():
+    # 20 miles in 2 minutes = 600 mph, which is unrealistic
+
+    chunk = pd.DataFrame({
+    'VendorID': [1],
+    'passenger_count': [1],
+    'RatecodeID': [1],
+    'payment_type': [1],
+    'trip_distance': [20.0],
+    'tpep_pickup_datetime': pd.to_datetime(['2024-01-06 10:00:00']),
+    'tpep_dropoff_datetime': pd.to_datetime(['2024-01-06 10:02:00']),
+})
+
+    duration_hours = (
+        chunk['tpep_dropoff_datetime'] -
+        chunk['tpep_pickup_datetime']
+    ).dt.total_seconds() / 3600
+
+    speed_mph = chunk['trip_distance'] / duration_hours
+
+    assert not (speed_mph > 100).any()
